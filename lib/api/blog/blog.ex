@@ -3,7 +3,7 @@ defmodule Api.Blog do
   The boundary for the Blog system.
   """
 
-  import Ecto.Query, warn: false
+  import Ecto.{Query, Changeset}, warn: false
   alias Api.Repo
 
   alias Api.Blog.Post
@@ -51,7 +51,7 @@ defmodule Api.Blog do
   """
   def create_post(attrs \\ %{}) do
     %Post{}
-    |> Post.changeset(attrs)
+    |> post_changeset(attrs)
     |> Repo.insert()
   end
 
@@ -69,7 +69,7 @@ defmodule Api.Blog do
   """
   def update_post(%Post{} = post, attrs) do
     post
-    |> Post.changeset(attrs)
+    |> post_changeset(attrs)
     |> Repo.update()
   end
 
@@ -99,6 +99,12 @@ defmodule Api.Blog do
 
   """
   def change_post(%Post{} = post) do
-    Post.changeset(post, %{})
+    post_changeset(post, %{})
+  end
+
+  defp post_changeset(%Post{} = post, attrs) do
+    post
+    |> cast(attrs, [:title, :body, :accounts_users_id])
+    |> validate_required([:title, :body])
   end
 end

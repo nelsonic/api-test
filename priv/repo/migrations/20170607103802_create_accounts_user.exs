@@ -9,5 +9,7 @@ defmodule Api.Repo.Migrations.CreateApi.Accounts.User do
       timestamps()
     end
 
+    create unique_index(:accounts_users, [:email])
+
   end
 end
