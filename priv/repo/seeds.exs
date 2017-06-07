@@ -9,3 +9,26 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
+
+alias Api.Repo
+alias Api.Accounts.User
+alias Api.Blog.Post
+
+# Create 10 seed users
+
+for _ <- 1..10 do
+  Repo.insert!(%User{
+    name: Faker.Name.name,
+    email: Faker.Internet.safe_email
+  })
+end
+
+# Create 40 seed posts
+
+for _ <- 1..50 do
+  Repo.insert!(%Post{
+    title: Faker.Lorem.sentence,
+    body: Faker.Lorem.paragraphs(%Range{first: 1, last: 5}) |> Enum.join("\n\n"),
+    accounts_users_id: Enum.random(1..10) # Pick random user for post to belong to
+  })
+end
